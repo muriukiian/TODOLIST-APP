@@ -1,10 +1,8 @@
-import ToDoList from './ToDoList.jsx';
+import ToDoList from "./ToDoList.jsx";
 
 function App(){
   return(
-    <div className='box'>
-      <ToDoList />
-    </div>
+    <ToDoList />
   );
 }
 

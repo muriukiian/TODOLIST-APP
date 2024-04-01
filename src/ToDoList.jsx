@@ -1,25 +1,59 @@
-import React, {useState} from 'react';
+import React, {useState} from 'react'
 
 function ToDoList(){
-  const [Todos, setTodos] = useState([]);
-  function addItem(){
-    const newItem = document.getElementById("activity").value;
-    document.getElementById("activity").value = "";
-    setTodos(t => [...t, newItem]);
+  const[tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
+  function handleInputChange(e){
+    setNewTask(e.target.value);
   }
-  function removeItem(index){
-    setTodos(Todos.filter((Todo, i) => i != index));
+  function addTask(){
+    if(newTask.trim() !== ""){
+      setTasks(t => [...t, newTask]);
+      setNewTask("");
+    }
   }
 
+  function deleteTask(index){
+    const updatedTasks = tasks.filter((_,i) => i !== index);
+    setTasks(updatedTasks);
+  }
+  function moveTaskUp(index){
+    if(index > 0){
+      const updatedTasks = [...tasks];
+      [updatedTasks[index],updatedTasks[index - 1]] = [updatedTasks[index - 1], updatedTasks[index]];
+      setTasks(updatedTasks);
+    }
+
+  }
+  function moveTaskDown(index){
+    if(index < tasks.length - 1){
+      const updatedTasks = [...tasks];
+      [updatedTasks[index],updatedTasks[index + 1]] = [updatedTasks[index + 1], updatedTasks[index]];
+      setTasks(updatedTasks);
+    }
+  }
   return(
-    <div className='card'>
-      <h1>To Do List</h1>
-      <label>***<u>Click on completed activities to remove them from your list.</u>***</label>
-      <ul className='todo'>
-        {Todos.map((Todo, index) => <li key={index} onClick={() => removeItem(index)}>{Todo}</li>)}
-      </ul>
-      <input type="text" id="activity" placeholder='Enter an activity' className='input'/><br></br>
-      <button onClick={addItem} className="button">Add Activity</button>
+    <div className='to-do-list'>
+      <h1>To-Do-List</h1>
+      <div>
+        <input type="text" placeholder="enter a task..." value={newTask} onChange={handleInputChange}/>
+        <button onClick={addTask} className='add-button'>Add</button>
+      </div>
+      <ol>
+        {tasks.map((task,index) => 
+        <li key={index}>
+          <span className='text'>{task}</span>
+          <button className='delete-button' onClick={()=>deleteTask(index)}>
+            Delete
+          </button>
+          <button className='move-button' onClick={()=>moveTaskUp(index)}>
+            👆            
+          </button>
+          <button className='move-button' onClick={()=>moveTaskDown(index)}>
+            👇            
+          </button>
+        </li>)}
+      </ol>
     </div>
   );
 }
